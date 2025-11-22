@@ -1,5 +1,6 @@
 package br.com.pablotzeliks.todolist.user.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import br.com.pablotzeliks.todolist.user.model.User;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists!");
         }
+
+        var passwordHashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+
+        user.setPassword(passwordHashed);
 
         var userCreated = repository.save(user);
 
