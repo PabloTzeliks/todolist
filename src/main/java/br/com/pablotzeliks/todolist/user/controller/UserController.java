@@ -3,6 +3,8 @@ package br.com.pablotzeliks.todolist.user.controller;
 import br.com.pablotzeliks.todolist.user.model.User;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +18,15 @@ public class UserController {
     private IUserRepository repository;
 
     @PostMapping("/create")
-    public User create(@RequestBody User user) {
+    public ResponseEntity create(@RequestBody User user) {
 
-        return this.repository.save(user);
+        if (repository.findByUsername(user.getUsername()) != null) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists!");
+        }
+
+        var userCreated = repository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userCreated);
     }
 }
