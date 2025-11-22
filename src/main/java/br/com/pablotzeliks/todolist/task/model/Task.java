@@ -1,10 +1,6 @@
 package br.com.pablotzeliks.todolist.task.model;
 
-import br.com.pablotzeliks.todolist.user.model.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,6 +23,8 @@ public class Task {
     private String description;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
+
+    @Enumerated(EnumType.STRING)
     private Priority priority;
 
     @CreationTimestamp
