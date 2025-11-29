@@ -28,9 +28,12 @@ public class TaskController {
 
         var currentDate = LocalDateTime.now();
 
-        if (currentDate.isBefore(task.getCreatedAt())) {
+        if (currentDate.isAfter(task.getStartAt()) || currentDate.isAfter(task.getEndAt())) {
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data inicial inválida.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data inicial / final inválida.");
+        } else if (task.getStartAt().isAfter(task.getEndAt()) || task.getStartAt().isEqual(task.getEndAt())) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data inicial não pode ser posterior ou Igual a Data Final.");
         }
 
         var newTask = repository.save(task);
