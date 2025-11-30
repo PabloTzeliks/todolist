@@ -138,10 +138,7 @@ cd todolist
 
 ### 🎓 Certificado Rocketseat
 
-<!-- Insira aqui a imagem do seu certificado -->
-<!-- ![Certificado Rocketseat](./assets/certificate-rocketseat.png) -->
-
-> 📌 *Espaço reservado para o certificado do curso de Spring Boot da Rocketseat.*
+<img width="1122" height="792" alt="png-certificate" src="https://github.com/user-attachments/assets/15a56c67-9a1f-4166-924f-2e332ebdd1ff" />
 
 ---
 
@@ -277,10 +274,7 @@ cd todolist
 
 ### 🎓 Rocketseat Certificate
 
-<!-- Insert your certificate image here -->
-<!-- ![Rocketseat Certificate](./assets/certificate-rocketseat.png) -->
-
-> 📌 *Space reserved for the Rocketseat Spring Boot course certificate.*
+<img width="1122" height="792" alt="png-certificate" src="https://github.com/user-attachments/assets/fa8c5e46-bf91-4d46-89f2-8b436442249f" />
 
 ---
 
