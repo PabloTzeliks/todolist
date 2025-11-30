@@ -53,7 +53,9 @@ public class TaskController {
     public ResponseEntity update(@RequestBody Task task, HttpServletRequest request, @PathVariable UUID id) {
 
         var updateTime = LocalDateTime.now();
-        var taskFromDb = repository.findById(id).orElse(null);
+        var userId = (UUID) request.getAttribute("userId");
+
+        var taskFromDb = repository.findByIdAndUserId(id, userId);
 
         if (taskFromDb == null) {
 
