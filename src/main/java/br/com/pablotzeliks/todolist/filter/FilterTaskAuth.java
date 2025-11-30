@@ -23,7 +23,7 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
         var servlePath = request.getServletPath();
 
-        if (!servlePath.equals("/tasks/create")) {
+        if (!servlePath.startsWith("/tasks/")) {
 
             filterChain.doFilter(request, response);
             return;
@@ -37,9 +37,6 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
         var username = credentials[0];
         var password = credentials[1];
-
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
 
         var user = userRepository.findByUsername(username);
 
