@@ -31,4 +31,14 @@ public class Task {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void setTitle(String title) throws IllegalArgumentException {
+
+        if (title.length() > 50) {
+
+            throw new IllegalArgumentException("Titulo não pode ultrapassar 50 carácteres.");
+        }
+
+        this.title = title;
+    }
 }
