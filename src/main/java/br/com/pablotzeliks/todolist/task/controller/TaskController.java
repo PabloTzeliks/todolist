@@ -47,4 +47,13 @@ public class TaskController {
 
         return repository.findByUserId((UUID) userId);
     }
+
+    @PutMapping("/update/{id}")
+    public void update(@RequestBody Task task, HttpServletRequest request, @PathVariable UUID id) {
+
+        var userId = request.getAttribute("userId");
+
+
+
+    }
 }
