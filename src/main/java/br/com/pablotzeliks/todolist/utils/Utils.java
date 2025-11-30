@@ -1,5 +1,6 @@
 package br.com.pablotzeliks.todolist.utils;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
@@ -9,9 +10,14 @@ import java.util.Set;
 
 public class Utils {
 
-    public String[] getNullPropertyNames(Object source) {
+    public static void copyNonNullProperties(Object src, Object target) {
 
-        Set<String> emptyNames = new HashSet<String>();
+        BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
+    }
+
+    public static String[] getNullPropertyNames(Object source) {
+
+        Set<String> emptyNames = new HashSet<>();
         final BeanWrapper src = new BeanWrapperImpl(source);
 
         PropertyDescriptor[] pds = src.getPropertyDescriptors();

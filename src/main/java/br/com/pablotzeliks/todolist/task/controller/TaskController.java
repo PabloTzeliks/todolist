@@ -2,6 +2,7 @@ package br.com.pablotzeliks.todolist.task.controller;
 
 import br.com.pablotzeliks.todolist.task.model.Task;
 import br.com.pablotzeliks.todolist.task.repository.ITaskRepository;
+import br.com.pablotzeliks.todolist.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,11 +50,21 @@ public class TaskController {
     }
 
     @PutMapping("/update/{id}")
-    public void update(@RequestBody Task task, HttpServletRequest request, @PathVariable UUID id) {
+    public ResponseEntity update(@RequestBody Task task, HttpServletRequest request, @PathVariable UUID id) {
 
-        var userId = request.getAttribute("userId");
+        var updateTime = LocalDateTime.now();
+        var taskFromDb = repository.findById(id).orElse(null);
 
+        if (taskFromDb == null) {
 
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa não encontrada.");
+        }
 
+        Utils.copyNonNullProperties(task, taskFromDb);
+
+        taskFromDb.setUpdatedAt(updateTime);
+        var updatedTask = repository.save(taskFromDb);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
     }
 }

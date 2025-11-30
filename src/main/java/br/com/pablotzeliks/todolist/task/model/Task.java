@@ -30,4 +30,5 @@ public class Task {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
 }
