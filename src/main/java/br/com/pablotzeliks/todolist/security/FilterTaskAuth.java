@@ -1,4 +1,4 @@
-package br.com.pablotzeliks.todolist.filter;
+package br.com.pablotzeliks.todolist.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;

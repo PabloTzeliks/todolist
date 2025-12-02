@@ -2,7 +2,7 @@ package br.com.pablotzeliks.todolist.task.controller;
 
 import br.com.pablotzeliks.todolist.task.model.Task;
 import br.com.pablotzeliks.todolist.task.repository.ITaskRepository;
-import br.com.pablotzeliks.todolist.utils.Utils;
+import br.com.pablotzeliks.todolist.common.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * <p>
  * Esta classe expõe endpoints para operações CRUD de tarefas, incluindo
  * criação, listagem e atualização. Todos os endpoints são prefixados com {@code /tasks}
- * e requerem autenticação via Basic Auth, que é validada pelo filtro {@link br.com.pablotzeliks.todolist.filter.FilterTaskAuth}.
+ * e requerem autenticação via Basic Auth, que é validada pelo filtro {@link br.com.pablotzeliks.todolist.security.FilterTaskAuth}.
  * </p>
  * <p>
  * A anotação {@code @RestController} combina {@code @Controller} e {@code @ResponseBody},
@@ -30,7 +30,7 @@ import java.util.UUID;
  * @since 1.0.0
  * @see Task
  * @see ITaskRepository
- * @see br.com.pablotzeliks.todolist.filter.FilterTaskAuth
+ * @see br.com.pablotzeliks.todolist.security.FilterTaskAuth
  */
 @RestController
 @RequestMapping("/tasks")
