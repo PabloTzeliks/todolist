@@ -14,5 +14,6 @@ public record TaskResponseDTO(
         LocalDateTime endAt,
         Priority priority,
         UUID userId,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) { }
