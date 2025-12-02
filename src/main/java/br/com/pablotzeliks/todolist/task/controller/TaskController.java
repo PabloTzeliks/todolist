@@ -3,8 +3,6 @@ package br.com.pablotzeliks.todolist.task.controller;
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
 import br.com.pablotzeliks.todolist.task.model.Task;
-import br.com.pablotzeliks.todolist.task.repository.ITaskRepository;
-import br.com.pablotzeliks.todolist.common.utils.Utils;
 import br.com.pablotzeliks.todolist.task.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,32 +59,27 @@ public class TaskController {
         }
     }
 
-//    @GetMapping("/list")
-//    public List<Task> list(HttpServletRequest request) {
-//
-//        var userId = request.getAttribute("userId");
-//
-//        return repository.findByUserId((UUID) userId);
-//    }
-//
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity update(@RequestBody Task task, HttpServletRequest request, @PathVariable UUID id) {
-//
-//        var updateTime = LocalDateTime.now();
-//        var userId = (UUID) request.getAttribute("userId");
-//
-//        var taskFromDb = repository.findByIdAndUserId(id, userId);
-//
-//        if (taskFromDb == null) {
-//
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa não encontrada.");
-//        }
-//
-//        Utils.copyNonNullProperties(task, taskFromDb);
-//
-//        taskFromDb.setUpdatedAt(updateTime);
-//        var updatedTask = repository.save(taskFromDb);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
-//    }
+    @GetMapping("/list")
+    public List<TaskResponseDTO> list(HttpServletRequest request) {
+
+        var userId = (UUID) request.getAttribute("userId");
+
+        return service.list(userId);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity update(@RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
+
+        var userId = (UUID) request.getAttribute("userId");
+
+        try {
+
+            TaskResponseDTO responseDTO = service.update(id,  requestDTO, userId);
+            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+
+        } catch (IllegalArgumentException ex) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
 }
