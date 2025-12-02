@@ -1,4 +1,4 @@
-package br.com.pablotzeliks.todolist.utils;
+package br.com.pablotzeliks.todolist.common.utils;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
