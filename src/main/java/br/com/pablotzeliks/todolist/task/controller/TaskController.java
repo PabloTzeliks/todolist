@@ -74,7 +74,7 @@ public class TaskController {
 
         try {
 
-            TaskResponseDTO responseDTO = service.update(id,  requestDTO, userId);
+            TaskResponseDTO responseDTO = service.update(id, requestDTO, userId);
             return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
 
         } catch (IllegalArgumentException ex) {
