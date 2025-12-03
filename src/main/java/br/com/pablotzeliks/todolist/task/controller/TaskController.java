@@ -68,7 +68,7 @@ public class TaskController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity update(@RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
+    public ResponseEntity<Object> update(@RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
 
         var userId = (UUID) request.getAttribute("userId");
 

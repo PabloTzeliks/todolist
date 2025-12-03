@@ -55,7 +55,7 @@ public class TaskService {
             throw new IllegalArgumentException("Usuário não tem permissão para acessar essa Tarefa.");
         }
 
-        validatesDate(taskRequestDTO);
+        validatesDateForUpdate(task, taskRequestDTO);
 
         if (taskRequestDTO.title() != null) task.setTitle(taskRequestDTO.title());
         if (taskRequestDTO.description() != null) task.setDescription(taskRequestDTO.description());
@@ -72,7 +72,7 @@ public class TaskService {
         return mapper.toResponse(persistencyTask);
     }
 
-    public void validatesDate(TaskRequestDTO requestDTO) {
+    private void validatesDate(TaskRequestDTO requestDTO) {
 
         var currentDate = LocalDateTime.now();
 
@@ -87,6 +87,24 @@ public class TaskService {
         }
 
         if (requestDTO.startAt().isEqual(requestDTO.endAt())) {
+
+            throw new IllegalArgumentException("Data inicial não pode igual a final.");
+        }
+    }
+
+    private void validatesDateForUpdate(Task task, TaskRequestDTO updateRequestDTO) {
+
+        var currentDate = LocalDateTime.now();
+
+        LocalDateTime startAt = updateRequestDTO.startAt() != null ? updateRequestDTO.startAt() : task.getStartAt();
+        LocalDateTime endAt = updateRequestDTO.endAt() != null ? updateRequestDTO.endAt() : task.getEndAt();
+
+        if (startAt.isAfter(endAt)) {
+
+            throw new IllegalArgumentException("Data inicial não pode ser posterior a final.");
+        }
+
+        if (startAt.isEqual(endAt)) {
 
             throw new IllegalArgumentException("Data inicial não pode igual a final.");
         }
