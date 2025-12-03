@@ -63,7 +63,9 @@ public class TaskService {
         if (taskRequestDTO.endAt() != null) task.setEndAt(taskRequestDTO.endAt());
         if (taskRequestDTO.priority() != null) task.setPriority(taskRequestDTO.priority());
 
-        task.setUpdatedAt(LocalDateTime.now());
+        var currentDate = LocalDateTime.now();
+
+        task.setUpdatedAt(currentDate);
 
         Task persistencyTask = repository.save(task);
 
