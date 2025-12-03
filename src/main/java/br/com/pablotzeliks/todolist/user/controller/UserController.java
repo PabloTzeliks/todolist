@@ -1,8 +1,11 @@
 package br.com.pablotzeliks.todolist.user.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import br.com.pablotzeliks.todolist.user.dto.UserRequestDTO;
+import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
 import br.com.pablotzeliks.todolist.user.model.User;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
+import br.com.pablotzeliks.todolist.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,51 +29,30 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  * @since 1.0.0
  * @see User
- * @see IUserRepository
+ * @see UserService
  */
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     /**
-     * Repositório para operações de persistência de usuários.
+     * Service para operações lógicas e de regra de négocio para os usuários.
      * Injetado automaticamente pelo Spring através de {@code @Autowired}.
      */
     @Autowired
-    private IUserRepository repository;
+    private UserService service;
 
-    /**
-     * Cria um novo usuário no sistema.
-     * <p>
-     * Este endpoint realiza as seguintes validações e operações:
-     * </p>
-     * <ol>
-     *   <li>Verifica se já existe um usuário com o mesmo username.</li>
-     *   <li>Gera um hash BCrypt da senha com custo 12 para armazenamento seguro.</li>
-     *   <li>Persiste o novo usuário no banco de dados.</li>
-     * </ol>
-     *
-     * @param user objeto contendo os dados do usuário a ser criado (name, username, password)
-     * @return {@link ResponseEntity} contendo:
-     *         <ul>
-     *           <li>HTTP 200 (OK) com o usuário criado em caso de sucesso</li>
-     *           <li>HTTP 400 (Bad Request) se o username já estiver em uso</li>
-     *         </ul>
-     */
     @PostMapping("/create")
-    public ResponseEntity create(@RequestBody User user) {
+    public ResponseEntity<Object> create(@RequestBody UserRequestDTO requestDTO) {
 
-        if (repository.findByUsername(user.getUsername()) != null) {
+        try {
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists!");
+            UserResponseDTO user = service.create(requestDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+
+        } catch (IllegalArgumentException ex) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
-
-        var passwordHashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
-
-        user.setPassword(passwordHashed);
-
-        var userCreated = repository.save(user);
-
-        return ResponseEntity.status(HttpStatus.OK).body(userCreated);
     }
 }

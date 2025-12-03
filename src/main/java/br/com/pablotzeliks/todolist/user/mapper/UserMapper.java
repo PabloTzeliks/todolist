@@ -1,5 +1,6 @@
 package br.com.pablotzeliks.todolist.user.mapper;
 
+import br.com.pablotzeliks.todolist.user.dto.UserRequestDTO;
 import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
 import br.com.pablotzeliks.todolist.user.model.User;
 import org.springframework.stereotype.Component;
@@ -19,15 +20,13 @@ public class UserMapper {
         );
     }
 
-    public User toEntity(UserResponseDTO dto) {
+    public User toEntity(UserRequestDTO dto) {
 
         if (dto == null) return null;
 
         User user = new User();
-        user.setId(dto.id());
         user.setName(dto.name());
         user.setUsername(dto.username());
-        user.setCreatedAt(dto.createdAt());
 
         return user;
     }
