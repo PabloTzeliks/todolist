@@ -4,7 +4,7 @@ import br.com.pablotzeliks.todolist.exception.dto.ErrorResponseDTO;
 import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceAlreadyExistsException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
-import org.apache.tomcat.websocket.AuthenticationException;
+import br.com.pablotzeliks.todolist.exception.general.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

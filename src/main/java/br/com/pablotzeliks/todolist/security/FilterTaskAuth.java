@@ -60,10 +60,28 @@ public class FilterTaskAuth extends OncePerRequestFilter {
             return;
         }
 
+        try {
+
+            validateAuth(request);
+
+            filterChain.doFilter(request, response);
+
+        } catch (Exception e) {
+
+            resolver.resolveException(request, response, null, e);
+        }
+    }
+
+    private void validateAuth(HttpServletRequest request) {
+
         var auth = request.getHeader("Authorization");
+
+        if (auth == null) {
+            throw new UserNotAuthorizedException("Token de autenticação não fornecido.");
+        }
+
         var authEncoded = auth.substring("Basic".length()).trim();
         var authDecoded = new String(Base64.getDecoder().decode(authEncoded));
-
         String[] credentials = authDecoded.split(":");
 
         var username = credentials[0];
@@ -73,19 +91,15 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
         if (user == null) {
 
-             throw new ResourceNotFoundException("Usuário não encontrado.");
-        } else {
-
-            var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
-
-            if (!passwordVerify.verified) {
-
-                throw new UserNotAuthorizedException("Senha inválida.");
-            }
-
-            request.setAttribute("userId", user.getId());
-
-            filterChain.doFilter(request, response);
+            throw new UserNotAuthorizedException("Usuário ou senha inválidos.");
         }
+
+        var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+
+        if (!passwordVerify.verified) {
+            throw new UserNotAuthorizedException("Usuário ou senha inválidos.");
+        }
+
+        request.setAttribute("userId", user.getId());
     }
 }
