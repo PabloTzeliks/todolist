@@ -1,10 +1,13 @@
 package br.com.pablotzeliks.todolist.task.service;
 
+import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
+import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
 import br.com.pablotzeliks.todolist.task.mapper.TaskMapper;
 import br.com.pablotzeliks.todolist.task.model.Task;
 import br.com.pablotzeliks.todolist.task.repository.ITaskRepository;
+import br.com.pablotzeliks.todolist.user.exception.UserNotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,11 +51,11 @@ public class TaskService {
 
     public TaskResponseDTO update(UUID id, TaskRequestDTO taskRequestDTO, UUID userId) {
 
-        Task task = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Tarefa não encontrada."));
+        Task task = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada."));
 
         if (!task.getUserId().equals(userId)) {
 
-            throw new IllegalArgumentException("Usuário não tem permissão para acessar essa Tarefa.");
+            throw new UserNotAuthorizedException("Usuário não tem permissão para acessar essa Tarefa.");
         }
 
         validatesDateForUpdate(task, taskRequestDTO);
@@ -78,17 +81,17 @@ public class TaskService {
 
         if (currentDate.isAfter(requestDTO.startAt()) || currentDate.isAfter(requestDTO.endAt())) {
 
-            throw new IllegalArgumentException("Data inicial / final deve ser futura.");
+            throw new BusinessRuleException("Data inicial / final deve ser futura.");
         }
 
         if (requestDTO.startAt().isAfter(requestDTO.endAt())) {
 
-            throw new IllegalArgumentException("Data inicial não pode ser posterior a final.");
+            throw new BusinessRuleException("Data inicial não pode ser posterior a final.");
         }
 
         if (requestDTO.startAt().isEqual(requestDTO.endAt())) {
 
-            throw new IllegalArgumentException("Data inicial não pode igual a final.");
+            throw new BusinessRuleException("Data inicial não pode igual a final.");
         }
     }
 
@@ -101,13 +104,12 @@ public class TaskService {
 
         if (startAt.isAfter(endAt)) {
 
-            throw new IllegalArgumentException("Data inicial não pode ser posterior a final.");
+            throw new BusinessRuleException("Data inicial não pode ser posterior a final.");
         }
 
         if (startAt.isEqual(endAt)) {
 
-            throw new IllegalArgumentException("Data inicial não pode igual a final.");
+            throw new BusinessRuleException("Data inicial não pode igual a final.");
         }
     }
-
 }

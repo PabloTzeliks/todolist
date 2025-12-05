@@ -1,13 +1,17 @@
 package br.com.pablotzeliks.todolist.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
+import br.com.pablotzeliks.todolist.user.exception.UserNotAuthorizedException;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -41,25 +45,10 @@ public class FilterTaskAuth extends OncePerRequestFilter {
     @Autowired
     private IUserRepository userRepository;
 
-    /**
-     * Executa a lógica de autenticação para requisições de tarefas.
-     * <p>
-     * O processo de autenticação segue os seguintes passos:
-     * </p>
-     * <ol>
-     *   <li>Verifica se a URL começa com {@code /tasks/}. Caso contrário, permite a requisição.</li>
-     *   <li>Extrai e decodifica as credenciais do header {@code Authorization} (Basic Auth).</li>
-     *   <li>Busca o usuário pelo username no banco de dados.</li>
-     *   <li>Verifica a senha utilizando BCrypt.</li>
-     *   <li>Em caso de sucesso, adiciona o userId como atributo da requisição.</li>
-     * </ol>
-     *
-     * @param request objeto da requisição HTTP
-     * @param response objeto da resposta HTTP
-     * @param filterChain cadeia de filtros para continuar o processamento
-     * @throws ServletException se ocorrer um erro durante o processamento do servlet
-     * @throws IOException se ocorrer um erro de entrada/saída
-     */
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -84,15 +73,14 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
         if (user == null) {
 
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User");
+             throw new ResourceNotFoundException("Usuário não encontrado.");
         } else {
 
             var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
 
             if (!passwordVerify.verified) {
 
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User");
-                return;
+                throw new UserNotAuthorizedException("Senha inválida.");
             }
 
             request.setAttribute("userId", user.getId());
