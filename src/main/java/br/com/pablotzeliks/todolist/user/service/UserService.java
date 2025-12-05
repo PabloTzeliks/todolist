@@ -1,6 +1,7 @@
 package br.com.pablotzeliks.todolist.user.service;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import br.com.pablotzeliks.todolist.exception.general.ResourceAlreadyExistsException;
 import br.com.pablotzeliks.todolist.user.dto.UserRequestDTO;
 import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
 import br.com.pablotzeliks.todolist.user.mapper.UserMapper;
@@ -25,7 +26,7 @@ public class UserService {
 
         if (userAlreadyExists != null) {
 
-            throw new IllegalArgumentException("Username já existente.");
+            throw new ResourceAlreadyExistsException("Username " + requestDTO.username() + " já está em uso.");
         }
 
         // requestDTO -> Entity

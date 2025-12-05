@@ -45,14 +45,8 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<Object> create(@RequestBody UserRequestDTO requestDTO) {
 
-        try {
+        UserResponseDTO user = service.create(requestDTO);
 
-            UserResponseDTO user = service.create(requestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
-
-        } catch (IllegalArgumentException ex) {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 }

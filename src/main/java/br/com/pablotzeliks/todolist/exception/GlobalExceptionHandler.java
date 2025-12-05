@@ -4,6 +4,7 @@ import br.com.pablotzeliks.todolist.exception.dto.ErrorResponseDTO;
 import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceAlreadyExistsException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -75,6 +76,18 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                ex.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(Exception.class)

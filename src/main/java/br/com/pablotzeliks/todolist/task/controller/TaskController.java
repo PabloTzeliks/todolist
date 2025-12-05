@@ -48,15 +48,8 @@ public class TaskController {
 
         var userId = (UUID) request.getAttribute("userId");
 
-        try {
-
-            TaskResponseDTO responseDTO = service.create(requestDTO, userId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
-
-        } catch (IllegalArgumentException ex) {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+        TaskResponseDTO responseDTO = service.create(requestDTO, userId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @GetMapping("/list")
@@ -72,14 +65,7 @@ public class TaskController {
 
         var userId = (UUID) request.getAttribute("userId");
 
-        try {
-
-            TaskResponseDTO responseDTO = service.update(id, requestDTO, userId);
-            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-
-        } catch (IllegalArgumentException ex) {
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
+        TaskResponseDTO responseDTO = service.update(id, requestDTO, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 }

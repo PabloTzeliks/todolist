@@ -1,5 +1,6 @@
 package br.com.pablotzeliks.todolist.task.model;
 
+import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -109,7 +110,7 @@ public class Task {
 
         if (title.length() > 50) {
 
-            throw new IllegalArgumentException("Titulo não pode ultrapassar 50 carácteres.");
+            throw new BusinessRuleException("Titulo não pode ultrapassar 50 carácteres.");
         }
 
         this.title = title;
