@@ -20,7 +20,14 @@ import java.util.Base64;
  * <p>
  * Este filtro intercepta todas as requisições direcionadas aos endpoints {@code /tasks/}
  * e valida a autenticação do usuário através do esquema Basic Auth. Caso a autenticação
- * seja bem-sucedida, o identificador do usuário é adicionado como atributo da requisição.
+ * seja bem-sucedida, o identificador do usuário é adicionado como atributo da requisição
+ * para uso posterior pelos Controllers e Services.
+ * </p>
+ * <p>
+ * <strong>Integração com o GlobalExceptionHandler:</strong><br>
+ * Utiliza injeção do {@code HandlerExceptionResolver} para delegar o tratamento de
+ * exceções de autenticação ao {@link br.com.pablotzeliks.todolist.exception.GlobalExceptionHandler},
+ * garantindo respostas JSON padronizadas mesmo para erros ocorridos no filtro.
  * </p>
  * <p>
  * A anotação {@code @Component} registra este filtro como um bean gerenciado pelo Spring.
@@ -29,10 +36,11 @@ import java.util.Base64;
  * </p>
  *
  * @author Pablo Tzeliks
- * @version 1.0.0
+ * @version 2.0.0
  * @since 1.0.0
  * @see OncePerRequestFilter
  * @see IUserRepository
+ * @see br.com.pablotzeliks.todolist.exception.GlobalExceptionHandler
  */
 @Component
 public class FilterTaskAuth extends OncePerRequestFilter {
@@ -44,6 +52,15 @@ public class FilterTaskAuth extends OncePerRequestFilter {
     @Autowired
     private IUserRepository userRepository;
 
+    /**
+     * Resolver de exceções do Spring MVC.
+     * <p>
+     * Injetado com {@code @Qualifier("handlerExceptionResolver")} para garantir
+     * que exceções lançadas durante a autenticação sejam tratadas pelo
+     * {@link br.com.pablotzeliks.todolist.exception.GlobalExceptionHandler},
+     * retornando JSON padronizado em vez de respostas HTML de erro.
+     * </p>
+     */
     @Autowired
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver resolver;

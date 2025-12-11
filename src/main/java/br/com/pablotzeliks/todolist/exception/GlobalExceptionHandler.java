@@ -21,16 +21,29 @@ import java.util.List;
  * <p>
  * Esta classe utiliza a anotação {@code @ControllerAdvice} para interceptar e tratar
  * exceções lançadas por qualquer controlador da aplicação, centralizando o tratamento
- * de erros e fornecendo respostas HTTP padronizadas.
+ * de erros e fornecendo respostas HTTP padronizadas conforme a <strong>RFC 7807</strong>
+ * (Problem Details for HTTP APIs).
  * </p>
  * <p>
- * O uso de {@code @ControllerAdvice} permite definir handlers de exceção que se aplicam
- * a todos os controladores, evitando duplicação de código de tratamento de erros.
+ * <strong>Benefícios da centralização:</strong>
+ * <ul>
+ *   <li>Elimina duplicação de código de tratamento de erros nos Controllers</li>
+ *   <li>Garante respostas consistentes em toda a API</li>
+ *   <li>Facilita integração com clientes ao fornecer estrutura JSON padronizada</li>
+ *   <li>Suporta lista de erros de validação detalhados (campo + mensagem)</li>
+ * </ul>
+ * </p>
+ * <p>
+ * Para erros de validação ({@code MethodArgumentNotValidException}), retorna um JSON
+ * com a lista {@code errors}, permitindo que o Frontend exiba erros específicos ao
+ * lado de cada campo do formulário.
  * </p>
  *
  * @author Pablo Tzeliks
- * @version 1.0.0
+ * @version 2.0.0
  * @since 1.0.0
+ * @see ErrorResponseDTO
+ * @see ValidationErrorDTO
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
