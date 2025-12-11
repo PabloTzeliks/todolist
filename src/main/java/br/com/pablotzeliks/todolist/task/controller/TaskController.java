@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +46,15 @@ public class TaskController {
      */
     @Autowired
     private TaskService service;
+
+    @Operation(
+            summary = "Cria uma nova tarefa",
+            description = "Cria uma tarefa para o usuário autenticado. Requer título, datas válidas e prioridade."
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "Tarefa criada com sucesso"
+    )
 
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody TaskRequestDTO requestDTO, HttpServletRequest request) {
