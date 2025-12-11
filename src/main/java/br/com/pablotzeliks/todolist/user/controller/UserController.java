@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     /**
-     * Service para operações lógicas e de regra de négocio para os usuários.
+     * Service para operações lógicas e de regra de negócio para os usuários.
      * Injetado automaticamente pelo Spring através de {@code @Autowired}.
      */
     @Autowired
