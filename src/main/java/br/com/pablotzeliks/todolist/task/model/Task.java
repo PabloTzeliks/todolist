@@ -106,13 +106,4 @@ public class Task {
      * @param title o título a ser definido para a tarefa
      * @throws IllegalArgumentException se o título ultrapassar 50 caracteres
      */
-    public void setTitle(String title) throws IllegalArgumentException {
-
-        if (title.length() > 50) {
-
-            throw new BusinessRuleException("Titulo não pode ultrapassar 50 carácteres.");
-        }
-
-        this.title = title;
-    }
 }

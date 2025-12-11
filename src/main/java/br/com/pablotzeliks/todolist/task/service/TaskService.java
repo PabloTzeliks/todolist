@@ -77,8 +77,6 @@ public class TaskService {
 
     private void validatesDate(TaskRequestDTO requestDTO) {
 
-        var currentDate = LocalDateTime.now();
-
         if (requestDTO.startAt().isAfter(requestDTO.endAt())) {
 
             throw new BusinessRuleException("Data inicial não pode ser posterior a final.");
@@ -91,8 +89,6 @@ public class TaskService {
     }
 
     private void validatesDateForUpdate(Task task, TaskRequestDTO updateRequestDTO) {
-
-        var currentDate = LocalDateTime.now();
 
         LocalDateTime startAt = updateRequestDTO.startAt() != null ? updateRequestDTO.startAt() : task.getStartAt();
         LocalDateTime endAt = updateRequestDTO.endAt() != null ? updateRequestDTO.endAt() : task.getEndAt();
