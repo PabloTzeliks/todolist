@@ -160,7 +160,7 @@ public class TaskService {
 
         if (startAt.isEqual(endAt)) {
 
-            throw new BusinessRuleException("Data inicial não pode igual a final.");
+            throw new BusinessRuleException("Data inicial não pode ser igual à final.");
         }
     }
 }
