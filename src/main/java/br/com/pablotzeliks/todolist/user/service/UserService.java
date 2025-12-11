@@ -10,6 +10,29 @@ import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Camada de serviço responsável pelas regras de negócio relacionadas a Usuários.
+ * <p>
+ * Esta classe concentra toda a lógica de negócio da aplicação para o domínio de usuários,
+ * incluindo validações de unicidade, hash de senhas com BCrypt e orquestração de operações.
+ * Ela NÃO retorna mais {@link org.springframework.http.ResponseEntity}, mas sim DTOs ou
+ * lança exceções semânticas que são tratadas pelo 
+ * {@link br.com.pablotzeliks.todolist.exception.GlobalExceptionHandler}.
+ * </p>
+ * <p>
+ * Seguindo o princípio de Single Responsibility, o Service delega a conversão de objetos
+ * ao {@link UserMapper} e a persistência ao {@link br.com.pablotzeliks.todolist.user.repository.IUserRepository},
+ * mantendo-se focado nas regras de negócio e segurança.
+ * </p>
+ *
+ * @author Pablo Tzeliks
+ * @version 2.0.0
+ * @since 1.0.0
+ * @see UserRequestDTO
+ * @see UserResponseDTO
+ * @see UserMapper
+ * @see br.com.pablotzeliks.todolist.user.repository.IUserRepository
+ */
 @Service
 public class UserService {
 
@@ -19,6 +42,18 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
+    /**
+     * Cria um novo usuário no sistema.
+     * <p>
+     * Este método valida a unicidade do username, converte o DTO em entidade,
+     * aplica hash BCrypt na senha (custo 12) e persiste no banco de dados.
+     * A senha nunca é armazenada em texto plano, garantindo segurança.
+     * </p>
+     *
+     * @param requestDTO DTO contendo os dados do usuário a ser criado
+     * @return DTO de resposta com os dados do usuário criado (sem a senha)
+     * @throws ResourceAlreadyExistsException se o username já estiver em uso
+     */
     public UserResponseDTO create(UserRequestDTO requestDTO) {
 
         // Validates the no existency of the User
