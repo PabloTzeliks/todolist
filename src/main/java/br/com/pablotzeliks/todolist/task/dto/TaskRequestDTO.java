@@ -45,7 +45,7 @@ public record TaskRequestDTO(
         LocalDateTime startAt,
 
         @NotNull(message = "You must insert an end date")
-        @Future(message = "End date must not be from past or present only from future")
+        @Future(message = "End date must not be from the past or present, only from the future")
         LocalDateTime endAt,
 
         Priority priority
