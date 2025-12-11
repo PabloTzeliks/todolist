@@ -5,6 +5,7 @@ import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
 import br.com.pablotzeliks.todolist.task.model.Task;
 import br.com.pablotzeliks.todolist.task.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class TaskController {
     private TaskService service;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody TaskRequestDTO requestDTO, HttpServletRequest request) {
+    public ResponseEntity<Object> create(@Valid @RequestBody TaskRequestDTO requestDTO, HttpServletRequest request) {
 
         var userId = (UUID) request.getAttribute("userId");
 
@@ -61,7 +62,7 @@ public class TaskController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
+    public ResponseEntity<Object> update(@Valid @RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
 
         var userId = (UUID) request.getAttribute("userId");
 

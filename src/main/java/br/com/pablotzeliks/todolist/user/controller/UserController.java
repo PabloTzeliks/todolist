@@ -6,6 +6,7 @@ import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
 import br.com.pablotzeliks.todolist.user.model.User;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import br.com.pablotzeliks.todolist.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class UserController {
     private UserService service;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> create(@RequestBody UserRequestDTO requestDTO) {
+    public ResponseEntity<Object> create(@Valid @RequestBody UserRequestDTO requestDTO) {
 
         UserResponseDTO user = service.create(requestDTO);
 
