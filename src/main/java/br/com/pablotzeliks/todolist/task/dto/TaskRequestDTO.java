@@ -41,7 +41,7 @@ public record TaskRequestDTO(
         String description,
 
         @NotNull(message = "You must insert a start date")
-        @FutureOrPresent(message = "Start date must not be from past only from present or past")
+        @FutureOrPresent(message = "Start date must not be from the past, only from the present or future")
         LocalDateTime startAt,
 
         @NotNull(message = "You must insert an end date")
