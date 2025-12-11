@@ -1,7 +1,6 @@
 package br.com.pablotzeliks.todolist.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
 import br.com.pablotzeliks.todolist.user.exception.UserNotAuthorizedException;
 import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import jakarta.servlet.*;

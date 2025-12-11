@@ -1,10 +1,8 @@
 package br.com.pablotzeliks.todolist.user.controller;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import br.com.pablotzeliks.todolist.user.dto.UserRequestDTO;
 import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
 import br.com.pablotzeliks.todolist.user.model.User;
-import br.com.pablotzeliks.todolist.user.repository.IUserRepository;
 import br.com.pablotzeliks.todolist.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

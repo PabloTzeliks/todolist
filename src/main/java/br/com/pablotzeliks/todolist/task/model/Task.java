@@ -1,6 +1,5 @@
 package br.com.pablotzeliks.todolist.task.model;
 
-import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
