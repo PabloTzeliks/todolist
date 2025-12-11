@@ -56,7 +56,7 @@ public class UserService {
      */
     public UserResponseDTO create(UserRequestDTO requestDTO) {
 
-        // Validates the no existency of the User
+        // Validates that the User does not exist
         var userAlreadyExists = repository.findByUsername(requestDTO.username());
 
         if (userAlreadyExists != null) {
