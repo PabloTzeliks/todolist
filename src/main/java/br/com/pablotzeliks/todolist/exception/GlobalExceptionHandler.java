@@ -1,6 +1,7 @@
 package br.com.pablotzeliks.todolist.exception;
 
 import br.com.pablotzeliks.todolist.exception.dto.ErrorResponseDTO;
+import br.com.pablotzeliks.todolist.exception.dto.ValidationErrorDTO;
 import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceAlreadyExistsException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.View;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * Controlador global de tratamento de exceções da aplicação.
@@ -103,14 +104,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
-        String errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining("; "));
+        // Devolve uma Lista de DTO para Erros de Validação, retornando um JSON de objetos de Erros personalizados
+        List<ValidationErrorDTO> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> new ValidationErrorDTO(error.getField(), error.getDefaultMessage()))
+                .toList();
 
         ErrorResponseDTO error = new ErrorResponseDTO(
-                errors,
+                "Error on Field Validation",
                 HttpStatus.BAD_REQUEST.value(),
-                "Validation Error"
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errors
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
