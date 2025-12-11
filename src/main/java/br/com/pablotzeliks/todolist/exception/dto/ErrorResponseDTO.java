@@ -5,6 +5,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
+/**
+ * DTO (Data Transfer Object) imutável para respostas de erro padronizadas.
+ * <p>
+ * Este record representa a estrutura padrão de respostas de erro da API, seguindo
+ * boas práticas como a RFC 7807 (Problem Details for HTTP APIs). Ele fornece informações
+ * consistentes sobre erros, facilitando a integração com clientes (Frontend, Mobile, etc).
+ * </p>
+ * <p>
+ * Quando ocorrem erros de validação (Bean Validation), a lista {@code errors} é populada
+ * com detalhes específicos de cada campo inválido. Para outros tipos de erro, essa lista
+ * é omitida do JSON através da anotação {@code @JsonInclude}.
+ * </p>
+ *
+ * @param message     Mensagem geral do erro
+ * @param status      Código HTTP do erro (ex: 400, 404, 500)
+ * @param statusError Descrição do status HTTP (ex: "Bad Request", "Not Found")
+ * @param errors      Lista detalhada de erros de validação (opcional)
+ *
+ * @author Pablo Tzeliks
+ * @version 2.0.0
+ * @since 1.0.0
+ * @see ValidationErrorDTO
+ * @see br.com.pablotzeliks.todolist.exception.GlobalExceptionHandler
+ */
 @Schema(description = "Estrutura padrão de resposta de erros da API")
 public record ErrorResponseDTO(
 
