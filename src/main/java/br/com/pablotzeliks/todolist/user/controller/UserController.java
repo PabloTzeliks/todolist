@@ -1,9 +1,13 @@
 package br.com.pablotzeliks.todolist.user.controller;
 
+import br.com.pablotzeliks.todolist.exception.dto.ErrorResponseDTO;
 import br.com.pablotzeliks.todolist.user.dto.UserRequestDTO;
 import br.com.pablotzeliks.todolist.user.dto.UserResponseDTO;
-import br.com.pablotzeliks.todolist.user.model.User;
 import br.com.pablotzeliks.todolist.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +44,11 @@ public class UserController {
      */
     @Autowired
     private UserService service;
+
+    @Operation(summary = "Registra um novo usuário", description = "Cria uma conta de usuário com senha criptografada")
+    @ApiResponse(responseCode = "201", description = "Sucesso")
+    @ApiResponse(responseCode = "409", description = "Conflito: Usuário já existe",
+            content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
 
     @PostMapping("/create")
     public ResponseEntity<Object> create(@Valid @RequestBody UserRequestDTO requestDTO) {
