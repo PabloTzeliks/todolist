@@ -79,11 +79,6 @@ public class TaskService {
 
         var currentDate = LocalDateTime.now();
 
-        if (currentDate.isAfter(requestDTO.startAt()) || currentDate.isAfter(requestDTO.endAt())) {
-
-            throw new BusinessRuleException("Data inicial / final deve ser futura.");
-        }
-
         if (requestDTO.startAt().isAfter(requestDTO.endAt())) {
 
             throw new BusinessRuleException("Data inicial não pode ser posterior a final.");
