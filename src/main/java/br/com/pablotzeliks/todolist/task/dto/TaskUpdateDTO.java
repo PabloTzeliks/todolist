@@ -5,6 +5,31 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO (Data Transfer Object) imutável para requisições de atualização de tarefas.
+ * <p>
+ * Este record representa um objeto de transferência de dados utilizado para receber
+ * informações de tarefas vindas do cliente (via HTTP). Por ser um DTO, ele isola a
+ * camada de apresentação da camada de persistência, evitando a exposição direta das
+ * entidades JPA e garantindo maior segurança e flexibilidade.
+ * </p>
+ * <p>
+ * Utiliza anotações do Bean Validation (Hibernate Validator) para validação declarativa
+ * dos campos, incluindo {@code @Size}, {@code @FutureOrPresent} e {@code @Future}
+ * garantindo integridade dos dados de entrada.
+ * </p>
+ *
+ * @param title       Título da tarefa (obrigatório, máximo 50 caracteres)
+ * @param description Descrição da tarefa (opcional, máximo 255 caracteres)
+ * @param startAt     Data/hora de início (obrigatória, presente ou futura)
+ * @param endAt       Data/hora de término (obrigatória, futura)
+ * @param priority    Prioridade da tarefa (enum Priority)
+ *
+ * @author Pablo Tzeliks
+ * @version 2.0.0
+ * @since 1.0.0
+ * @see br.com.pablotzeliks.todolist.task.model.Task
+ */
 import java.time.LocalDateTime;
 
 public record TaskUpdateDTO(

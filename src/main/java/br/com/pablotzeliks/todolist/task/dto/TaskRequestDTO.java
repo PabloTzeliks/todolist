@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
 /**
- * DTO (Data Transfer Object) imutável para requisições de criação e atualização de tarefas.
+ * DTO (Data Transfer Object) imutável para requisições de criação de tarefas.
  * <p>
  * Este record representa um objeto de transferência de dados utilizado para receber
  * informações de tarefas vindas do cliente (via HTTP). Por ser um DTO, ele isola a
