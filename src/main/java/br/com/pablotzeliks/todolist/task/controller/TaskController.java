@@ -2,7 +2,7 @@ package br.com.pablotzeliks.todolist.task.controller;
 
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
-import br.com.pablotzeliks.todolist.task.model.Task;
+import br.com.pablotzeliks.todolist.task.dto.TaskUpdateDTO;
 import br.com.pablotzeliks.todolist.task.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -132,7 +132,7 @@ public class TaskController {
             description = "Tarefa atualizada com sucesso"
     )
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@Valid @RequestBody TaskRequestDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
+    public ResponseEntity<Object> update(@Valid @RequestBody TaskUpdateDTO requestDTO, HttpServletRequest request, @PathVariable UUID id) {
 
         var userId = (UUID) request.getAttribute("userId");
 

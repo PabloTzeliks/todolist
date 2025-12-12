@@ -4,6 +4,7 @@ import br.com.pablotzeliks.todolist.exception.general.BusinessRuleException;
 import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
+import br.com.pablotzeliks.todolist.task.dto.TaskUpdateDTO;
 import br.com.pablotzeliks.todolist.task.mapper.TaskMapper;
 import br.com.pablotzeliks.todolist.task.model.Task;
 import br.com.pablotzeliks.todolist.task.repository.ITaskRepository;
@@ -109,7 +110,7 @@ public class TaskService {
      * @throws UserNotAuthorizedException    se o usuário não for o proprietário da tarefa
      * @throws BusinessRuleException         se as datas forem inválidas
      */
-    public TaskResponseDTO update(UUID id, TaskRequestDTO taskRequestDTO, UUID userId) {
+    public TaskResponseDTO update(UUID id, TaskUpdateDTO taskRequestDTO, UUID userId) {
 
         Task task = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tarefa não encontrada."));
 
@@ -148,7 +149,7 @@ public class TaskService {
         }
     }
 
-    private void validatesDateForUpdate(Task task, TaskRequestDTO updateRequestDTO) {
+    private void validatesDateForUpdate(Task task, TaskUpdateDTO updateRequestDTO) {
 
         LocalDateTime startAt = updateRequestDTO.startAt() != null ? updateRequestDTO.startAt() : task.getStartAt();
         LocalDateTime endAt = updateRequestDTO.endAt() != null ? updateRequestDTO.endAt() : task.getEndAt();

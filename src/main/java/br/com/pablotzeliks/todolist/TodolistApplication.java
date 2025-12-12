@@ -3,6 +3,8 @@ package br.com.pablotzeliks.todolist;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 /**
  * Classe principal da aplicação TodoList.
  * <p>
@@ -36,6 +38,8 @@ public class TodolistApplication {
 	 * @param args argumentos de linha de comando passados durante a inicialização da aplicação
 	 */
 	public static void main(String[] args) {
+
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
 		SpringApplication.run(TodolistApplication.class, args);
 	}
 
