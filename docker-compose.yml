@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Serviço do Banco de Dados
   postgres-db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: todo_pg_local
     environment:
       - POSTGRES_USER=local_user
