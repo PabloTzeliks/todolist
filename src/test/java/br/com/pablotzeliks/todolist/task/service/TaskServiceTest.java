@@ -1,5 +1,7 @@
 package br.com.pablotzeliks.todolist.task.service;
 
+import br.com.pablotzeliks.todolist.user.exception.UserNotAuthorizedException;
+import br.com.pablotzeliks.todolist.exception.general.ResourceNotFoundException;
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskUpdateDTO;
@@ -19,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -180,8 +181,52 @@ class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("Test if TaskService invalidates update when a Task is not Found. Should successfully update a Task when everything is correct.")
+    @DisplayName("Test if TaskService invalidates update when a Task is not Found. Should not update a Task and return a ResourceNotFoundException.")
     void updateTaskNotFound_Test() {
+
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        UUID nonExistentId = UUID.randomUUID();
+        TaskUpdateDTO updateDTO = new TaskUpdateDTO("Title", null, null, null, null);
+
+        // The repository will return empty when searching for the non-existent ID
+        when(taskRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> {
+            taskService.update(nonExistentId, updateDTO, userId);
+        });
+
+        verify(taskRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test if TaskService invalidates update when the User is not Authorized. Should not update a Task and return a ResourceNotFoundException.")
+    void updateTaskNotAuthorized_Test() {
+
+        // Arrange
+        UUID ownerId = UUID.randomUUID();
+        UUID maliciousUserId = UUID.randomUUID();
+        UUID taskId = UUID.randomUUID();
+
+        TaskUpdateDTO updateDTO = new TaskUpdateDTO("Hacked Title", null, null, null, null);
+
+        // Task which belongs to ownerId
+        Task existingTask = new Task();
+        existingTask.setId(taskId);
+        existingTask.setUserId(ownerId); // Pertence ao ownerId
+
+        // Mocking the repository findById method
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+
+        // Act & Assert
+        // Call the malicious user trying to update
+        assertThrows(UserNotAuthorizedException.class, () -> {
+            taskService.update(taskId, updateDTO, maliciousUserId);
+        });
+
+        verify(taskRepository, never()).save(any());
+    }
 
     // Auxiliary methods
 
