@@ -2,6 +2,7 @@ package br.com.pablotzeliks.todolist.task.service;
 
 import br.com.pablotzeliks.todolist.task.dto.TaskRequestDTO;
 import br.com.pablotzeliks.todolist.task.dto.TaskResponseDTO;
+import br.com.pablotzeliks.todolist.task.dto.TaskUpdateDTO;
 import br.com.pablotzeliks.todolist.task.mapper.TaskMapper;
 import br.com.pablotzeliks.todolist.task.model.Priority;
 import br.com.pablotzeliks.todolist.task.model.Task;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -119,6 +121,67 @@ class TaskServiceTest {
         verify(taskMapper, times(1)).toResponse(firstTaskSaved);
         verify(taskMapper, times(1)).toResponse(secondTaskSaved);
     }
+
+    @Test
+    @DisplayName("Test if TaskService is correctly updating Tasks. Should successfully update a Task when everything is correct.")
+    void updateTaskSuccessfully_Test() {
+
+        // Triple A pattern: Arrange, Act, Assert
+
+        // Arrange
+        UUID userId = UUID.randomUUID();
+        UUID taskId = UUID.randomUUID();
+
+        // Data Already in the DB
+        Task existingTask = new Task();
+        existingTask.setId(taskId);
+        existingTask.setUserId(userId);
+        existingTask.setTitle("Old Title");
+        existingTask.setDescription("Old Description");
+        existingTask.setStartAt(LocalDateTime.now().plusDays(1));
+        existingTask.setEndAt(LocalDateTime.now().plusDays(2));
+
+        // New Data to update
+        TaskUpdateDTO updateDTO = new TaskUpdateDTO(
+                "New Title",
+                "New Description",
+                null,
+                null,
+                null
+        );
+
+        // Expected Data after update
+        TaskResponseDTO expectedResponse = new TaskResponseDTO(
+                taskId, "New Title", "New Description",
+                existingTask.getStartAt(), existingTask.getEndAt(),
+                existingTask.getPriority(), userId, null, LocalDateTime.now()
+        );
+
+        // Mocking the repository findById method
+        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
+
+        // Mocking the repository save method
+        when(taskRepository.save(existingTask)).thenReturn(existingTask);
+
+        // Mocking the mapper behavior from Entity to ResponseDTO
+        when(taskMapper.toResponse(existingTask)).thenReturn(expectedResponse);
+
+        // Act
+        TaskResponseDTO result = taskService.update(taskId, updateDTO, userId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("New Title", result.title());
+        assertEquals("New Description", result.description());
+
+        assertEquals(existingTask.getStartAt(), result.startAt());
+
+        verify(taskRepository).save(existingTask);
+    }
+
+    @Test
+    @DisplayName("Test if TaskService invalidates update when a Task is not Found. Should successfully update a Task when everything is correct.")
+    void updateTaskNotFound_Test() {
 
     // Auxiliary methods
 
