@@ -78,9 +78,9 @@ class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest))
                         .requestAttr("userId", UUID.randomUUID()))
-                .andExpect(status().isBadRequest()); // O @Valid deve barrar e retornar 400
+                .andExpect(status().isBadRequest());
 
-        verify(taskService, never()).create(any(), any()); // Descomente se quiser ser estrito
+        verify(taskService, never()).create(any(), any());
     }
 
     @Test
@@ -100,7 +100,7 @@ class TaskControllerTest {
         mockMvc.perform(get("/tasks/list")
                         .requestAttr("userId", userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(task1.id().toString())) // Acessa o primeiro item da lista
+                .andExpect(jsonPath("$[0].id").value(task1.id().toString()))
                 .andExpect(jsonPath("$.length()").value(1));
     }
 
@@ -131,12 +131,12 @@ class TaskControllerTest {
         UUID userId = UUID.randomUUID();
         UUID taskId = UUID.randomUUID();
         TaskUpdateDTO updateDTO = new TaskUpdateDTO("New Title", null, null, null, null);
-        TaskResponseDTO responseDTO = createResponse(taskId, userId); // Simulamos que retornou atualizado
+        TaskResponseDTO responseDTO = createResponse(taskId, userId);
 
         when(taskService.update(eq(taskId), any(TaskUpdateDTO.class), eq(userId))).thenReturn(responseDTO);
 
         // Act & Assert
-        mockMvc.perform(put("/tasks/update/{id}", taskId) // Passando ID na URL
+        mockMvc.perform(put("/tasks/update/{id}", taskId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDTO))
                         .requestAttr("userId", userId))
