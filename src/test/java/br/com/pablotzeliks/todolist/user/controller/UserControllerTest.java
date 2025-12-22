@@ -43,12 +43,12 @@ class UserControllerTest {
     void createUser_Return201() throws Exception {
 
         // Arrange
-        UserRequestDTO request = new UserRequestDTO("pablo", "Pablo Tzeliks", "123456");
+        UserRequestDTO request = new UserRequestDTO("Pablo Tzeliks", "pablo", "123456");
 
         UserResponseDTO response = new UserResponseDTO(
                 UUID.randomUUID(),
-                "pablo",
                 "Pablo Tzeliks",
+                "pablo",
                 LocalDateTime.now()
         );
 
