@@ -43,8 +43,8 @@ This project has undergone significant transformations, evolving through distinc
 | Version | Name | Key Features | Release |
 |---------|------|-------------|---------|
 | [**v3.0.0**](https://github.com/PabloTzeliks/todolist/releases/tag/v3.0.0) | **The DevOps & QA Update** | • PostgreSQL integration for production<br/>• Spring Profiles (Dev/Prod environments)<br/>• Comprehensive unit tests (JUnit 5 + Mockito)<br/>• GitHub Actions CI/CD pipeline | *Current* |
-| **v2.0.0** | **The Architecture Update** | • Layered architecture implementation<br/>• DTO & Mapper patterns<br/>• Global exception handling (RFC 7807)<br/>• Bean validation integration | 2024 |
-| **v1.0.0-course** | **The MVP** | • Initial RESTful API structure<br/>• Basic CRUD operations<br/>• Swagger/OpenAPI documentation | 2024 |
+| **v2.0.0** | **The Architecture Update** | • Layered architecture implementation<br/>• DTO & Mapper patterns<br/>• Global exception handling (RFC 7807)<br/>• Bean validation integration | 2025 |
+| **v1.0.0-course** | **The MVP** | • Initial RESTful API structure<br/>• Basic CRUD operations<br/>• Swagger/OpenAPI documentation | 2025 |
 
 ### 🎯 What Makes v3.0.0 "Enterprise-Grade"
 
@@ -138,15 +138,77 @@ This project implements a **Clean Layered Architecture** with clear separation o
 
          Supporting Components:
          ├── Mappers: DTO ↔ Entity conversion
-         └── Exception Handlers: Global error responses (RFC 7807)
+         ├── Exception Handlers: Global error responses (RFC 7807)
+         ├── Security Filters: Authentication & Authorization
+         └── Configuration: Swagger, JPA, Profiles
+```
+
+### 📦 Package Structure & Responsibilities
+
+The application follows a **modular package-by-feature** organization, promoting high cohesion and low coupling:
+
+```
+src/main/java/br/com/pablotzeliks/todolist/
+│
+├── 📋 task/                          # Task Management Module
+│   ├── controller/                   # REST endpoints for tasks
+│   │   └── TaskController.java      # POST /create, GET /list, PUT /update/{id}
+│   ├── service/                      # Business logic & validation
+│   │   └── TaskService.java         # Task CRUD operations, authorization checks
+│   ├── repository/                   # Data access layer
+│   │   └── ITaskRepository.java     # JPA repository interface
+│   ├── model/                        # Domain entities
+│   │   ├── Task.java                # JPA entity with relationships
+│   │   └── Priority.java            # Enum (LOW, MEDIUM, HIGH, URGENT)
+│   ├── dto/                          # Data Transfer Objects
+│   │   ├── TaskRequestDTO.java      # Request payload for creation
+│   │   ├── TaskUpdateDTO.java       # Request payload for updates
+│   │   └── TaskResponseDTO.java     # Response payload
+│   └── mapper/                       # DTO ↔ Entity conversion
+│       └── TaskMapper.java          # Manual mapping logic
+│
+├── 👤 user/                          # User Management Module
+│   ├── controller/                   # REST endpoints for users
+│   │   └── UserController.java      # POST /create
+│   ├── service/                      # Business logic & password hashing
+│   │   └── UserService.java         # User creation, BCrypt integration
+│   ├── repository/                   # Data access layer
+│   │   └── IUserRepository.java     # JPA repository with custom queries
+│   ├── model/                        # Domain entities
+│   │   └── User.java                # JPA entity
+│   ├── dto/                          # Data Transfer Objects
+│   │   ├── UserRequestDTO.java      # Request payload
+│   │   └── UserResponseDTO.java     # Response payload (no password)
+│   ├── mapper/                       # DTO ↔ Entity conversion
+│   │   └── UserMapper.java          # Manual mapping logic
+│   └── exception/                    # User-specific exceptions
+│       └── UserNotAuthorizedException.java
+│
+├── 🛡️ exception/                     # Global Exception Handling
+│   ├── GlobalExceptionHandler.java  # @ControllerAdvice for all exceptions
+│   ├── dto/                          # Error response DTOs
+│   │   ├── ErrorResponseDTO.java    # RFC 7807 compliant error structure
+│   │   └── ValidationErrorDTO.java  # Field validation errors
+│   └── general/                      # Reusable exception classes
+│       ├── ResourceNotFoundException.java
+│       ├── ResourceAlreadyExistsException.java
+│       ├── BusinessRuleException.java
+│       └── AuthenticationException.java
+│
+├── 🔒 security/                      # Security & Authentication
+│   └── FilterTaskAuth.java          # Custom filter for Basic Auth validation
+│
+└── ⚙️ config/                        # Application Configuration
+    └── SwaggerConfig.java            # OpenAPI/Swagger documentation setup
 ```
 
 ### Key Design Patterns
 
-- **DTO Pattern**: Request/Response objects decouple API contracts from internal models
-- **Mapper Pattern**: Dedicated classes handle object transformations
-- **Repository Pattern**: JPA repositories abstract data access
-- **Global Exception Handling**: Centralized `@ControllerAdvice` for consistent error responses
+- **DTO Pattern**: Request/Response objects decouple API contracts from internal models, preventing over-exposure and tight coupling
+- **Mapper Pattern**: Dedicated classes handle object transformations, centralizing conversion logic
+- **Repository Pattern**: JPA repositories abstract data access, providing a clean separation from business logic
+- **Global Exception Handling**: Centralized `@ControllerAdvice` ensures consistent error responses across all endpoints (RFC 7807)
+- **Filter Chain Pattern**: Custom security filter (`FilterTaskAuth`) validates authentication before reaching controllers
 
 ---
 
@@ -213,16 +275,200 @@ docker-compose up
 ## 📡 API Endpoints
 
 ### 👤 User Management
-- **POST** `/users/create` - Register a new user (public)
 
-### 📋 Task Management (Requires Basic Auth)
-- **POST** `/tasks/create` - Create a new task
-- **GET** `/tasks/list` - List all user tasks
-- **PUT** `/tasks/update/{id}` - Update an existing task
+#### **POST** `/users/create` - Register a new user
+**Authentication**: ❌ Not required (public endpoint)
+
+**Request Body**:
+```json
+{
+  "name": "John Silva",
+  "username": "john.silva",
+  "password": "securepass123"
+}
+```
+
+**Validations**:
+- `name`: Required, cannot be blank
+- `username`: Required, cannot be blank, must be unique
+- `password`: Required, 6-20 characters
+
+**Success Response (201 Created)**:
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "John Silva",
+  "username": "john.silva",
+  "createdAt": "2025-12-22T10:30:00"
+}
+```
+
+**Error Response (409 Conflict)** - User already exists:
+```json
+{
+  "message": "User already exists",
+  "status": 409,
+  "statusError": "Conflict"
+}
+```
+
+---
+
+### 📋 Task Management
+
+All task endpoints require **HTTP Basic Authentication** with username and password.
+
+#### **POST** `/tasks/create` - Create a new task
+**Authentication**: ✅ Required (Basic Auth)
+
+**Request Headers**:
+```
+Authorization: Basic am9obi5zaWx2YTpzZWN1cmVwYXNzMTIz
+```
+
+**Request Body**:
+```json
+{
+  "title": "Study Spring Boot",
+  "description": "Review Spring Data JPA concepts and best practices",
+  "startAt": "2025-12-23T09:00:00",
+  "endAt": "2025-12-23T11:00:00",
+  "priority": "HIGH"
+}
+```
+
+**Validations**:
+- `title`: Required, max 50 characters
+- `description`: Optional, max 255 characters
+- `startAt`: Required, must be present or future date
+- `endAt`: Required, must be future date
+- `priority`: Enum (`LOW`, `MEDIUM`, `HIGH`, `URGENT`)
+
+**Success Response (201 Created)**:
+```json
+{
+  "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "title": "Study Spring Boot",
+  "description": "Review Spring Data JPA concepts and best practices",
+  "startAt": "2025-12-23T09:00:00",
+  "endAt": "2025-12-23T11:00:00",
+  "priority": "HIGH",
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "createdAt": "2025-12-22T10:35:00",
+  "updatedAt": "2025-12-22T10:35:00"
+}
+```
+
+---
+
+#### **GET** `/tasks/list` - List all user tasks
+**Authentication**: ✅ Required (Basic Auth)
+
+**Request Headers**:
+```
+Authorization: Basic am9obi5zaWx2YTpzZWN1cmVwYXNzMTIz
+```
+
+**Success Response (200 OK)**:
+```json
+[
+  {
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "title": "Study Spring Boot",
+    "description": "Review Spring Data JPA concepts and best practices",
+    "startAt": "2025-12-23T09:00:00",
+    "endAt": "2025-12-23T11:00:00",
+    "priority": "HIGH",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "createdAt": "2025-12-22T10:35:00",
+    "updatedAt": "2025-12-22T10:35:00"
+  },
+  {
+    "id": "8d0f7780-8536-51ef-b058-f18ed2g01bf8",
+    "title": "Project Meeting",
+    "description": "Discuss v3.0.0 features and roadmap",
+    "startAt": "2025-12-24T14:00:00",
+    "endAt": "2025-12-24T15:30:00",
+    "priority": "URGENT",
+    "userId": "550e8400-e29b-41d4-a716-446655440000",
+    "createdAt": "2025-12-22T11:00:00",
+    "updatedAt": "2025-12-22T11:00:00"
+  }
+]
+```
+
+**Empty List Response (200 OK)**:
+```json
+[]
+```
+
+---
+
+#### **PUT** `/tasks/update/{id}` - Update an existing task
+**Authentication**: ✅ Required (Basic Auth)
+
+**URL Parameters**:
+- `id`: UUID of the task to update (e.g., `7c9e6679-7425-40de-944b-e07fc1f90ae7`)
+
+**Request Headers**:
+```
+Authorization: Basic am9obi5zaWx2YTpzZWN1cmVwYXNzMTIz
+```
+
+**Request Body** (all fields optional - partial update):
+```json
+{
+  "title": "Study Spring Boot & Security",
+  "description": "Review Spring Data JPA and Spring Security",
+  "priority": "URGENT"
+}
+```
+
+**Validations**:
+- `title`: Optional, max 50 characters
+- `description`: Optional, max 255 characters
+- `startAt`: Optional, must be present or future date
+- `endAt`: Optional, must be future date
+- `priority`: Optional, enum (`LOW`, `MEDIUM`, `HIGH`, `URGENT`)
+
+**Success Response (200 OK)**:
+```json
+{
+  "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "title": "Study Spring Boot & Security",
+  "description": "Review Spring Data JPA and Spring Security",
+  "startAt": "2025-12-23T09:00:00",
+  "endAt": "2025-12-23T11:00:00",
+  "priority": "URGENT",
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "createdAt": "2025-12-22T10:35:00",
+  "updatedAt": "2025-12-22T11:15:00"
+}
+```
+
+**Error Response (404 Not Found)** - Task doesn't exist:
+```json
+{
+  "message": "Task not found",
+  "status": 404,
+  "statusError": "Not Found"
+}
+```
+
+**Error Response (403 Forbidden)** - User doesn't own the task:
+```json
+{
+  "message": "User not authorized to access this resource",
+  "status": 403,
+  "statusError": "Forbidden"
+}
+```
+
+---
 
 ### 📚 Documentation
-- **Swagger UI**: `/swagger-ui/index.html` - Interactive API explorer
-- **OpenAPI JSON**: `/api-docs` - Machine-readable API specification
+- **Swagger UI**: `http://localhost:8080/swagger-ui/index.html` - Interactive API explorer with live testing
+- **OpenAPI JSON**: `http://localhost:8080/api-docs` - Machine-readable API specification
 
 ---
 
@@ -288,8 +534,9 @@ All errors follow **RFC 7807 (Problem Details for HTTP APIs)** for consistent, m
 
 Senior Java Developer | DevOps Enthusiast | Open Source Contributor
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pablotzeliks/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pablo-ruan-tzeliks/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/PabloTzeliks)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:arq.pabloo@gmail.com)
 
 ### 🎓 Origins
 
