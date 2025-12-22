@@ -286,7 +286,7 @@ docker-compose up
 {
   "name": "João Silva",
   "username": "joao.silva",
-  "password": "senhasegura123"
+  "password": "securepass123"
 }
 ```
 
@@ -325,7 +325,7 @@ Todos os endpoints de tarefas requerem **Autenticação HTTP Basic** com usernam
 
 **Headers da Requisição**:
 ```
-Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
+Authorization: Basic am9hby5zaWx2YTpzZWN1cmVwYXNzMTIz
 ```
 
 **Corpo da Requisição**:
@@ -368,7 +368,7 @@ Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
 
 **Headers da Requisição**:
 ```
-Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
+Authorization: Basic am9hby5zaWx2YTpzZWN1cmVwYXNzMTIz
 ```
 
 **Resposta de Sucesso (200 OK)**:
@@ -386,7 +386,7 @@ Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
     "updatedAt": "2025-12-22T10:35:00"
   },
   {
-    "id": "8d0f7780-8536-51ef-b058-f18ed2g01bf8",
+    "id": "8d0f7780-8536-51ef-b058-f18ed2e01bf8",
     "title": "Reunião do Projeto",
     "description": "Discutir funcionalidades da v3.0.0 e roadmap",
     "startAt": "2025-12-24T14:00:00",
@@ -414,7 +414,7 @@ Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
 
 **Headers da Requisição**:
 ```
-Authorization: Basic am9hby5zaWx2YTpzZW5oYXNlZ3VyYTEyMw==
+Authorization: Basic am9hby5zaWx2YTpzZWN1cmVwYXNzMTIz
 ```
 
 **Corpo da Requisição** (todos os campos opcionais - atualização parcial):

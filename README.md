@@ -384,7 +384,7 @@ Authorization: Basic am9obi5zaWx2YTpzZWN1cmVwYXNzMTIz
     "updatedAt": "2025-12-22T10:35:00"
   },
   {
-    "id": "8d0f7780-8536-51ef-b058-f18ed2g01bf8",
+    "id": "8d0f7780-8536-51ef-b058-f18ed2e01bf8",
     "title": "Project Meeting",
     "description": "Discuss v3.0.0 features and roadmap",
     "startAt": "2025-12-24T14:00:00",
