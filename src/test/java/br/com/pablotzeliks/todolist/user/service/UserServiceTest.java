@@ -106,7 +106,7 @@ class UserServiceTest {
             userService.create(requestDTO);
         });
 
-        assertEquals("Username pablo já está em uso.", exception.getMessage());
+        assertEquals("Username Pablo Tzeliks já está em uso.", exception.getMessage());
 
         // Verify
         verify(mapper, never()).toEntity(any());
