@@ -84,8 +84,6 @@ Every push to the main branch triggers an **automated GitHub Actions workflow** 
 
 This ensures **code integrity** and prevents broken builds from reaching production.
 
-**View CI Status**: [![Java CI](https://github.com/PabloTzeliks/todolist/actions/workflows/maven.yml/badge.svg)](https://github.com/PabloTzeliks/todolist/actions/workflows/maven.yml)
-
 ### 🌐 Environment Profiles
 
 The application intelligently adapts to different deployment contexts:
