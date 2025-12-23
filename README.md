@@ -545,7 +545,7 @@ This project originated from the [Rocketseat Java Course](https://www.rocketseat
 <details>
 <summary>View Completion Certificate</summary>
 
-<img width="560" alt="Rocketseat Java Certificate" src="https://github.com/user-attachments/assets/15a56c67-9a1f-4166-924f-2e332ebdd1ff" />
+<img width="1024" alt="Rocketseat Java Certificate" src="https://github.com/user-attachments/assets/15a56c67-9a1f-4166-924f-2e332ebdd1ff" />
 
 </details>
 
