@@ -19,7 +19,7 @@
       </a>
     </td>
     <td align="center" width="50%">
-      <a href="README-pt-BR.md">
+      <a href="README-pt-BR-v3.md">
         <img src="https://img.shields.io/badge/🇧🇷_Português-Documentação_Completa-green?style=for-the-badge" alt="Português"/>
       </a>
     </td>
