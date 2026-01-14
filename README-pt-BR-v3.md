@@ -534,7 +534,7 @@ Todos os erros seguem **RFC 7807 (Problem Details for HTTP APIs)** para resposta
 
 **Pablo Ruan Tzeliks**
 
-Desenvolvedor Java Sênior | Entusiasta DevOps | Contribuidor Open Source
+Desenvolvedor de Software | Entusiasta de Tecnologia | Aprendizado Continuo
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pablo-ruan-tzeliks/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/PabloTzeliks)
